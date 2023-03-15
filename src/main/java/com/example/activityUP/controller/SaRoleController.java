@@ -2,11 +2,14 @@ package com.example.activityUP.controller;
 
 
 import cn.dev33.satoken.secure.SaSecureUtil;
+import cn.dev33.satoken.util.SaResult;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.activityUP.entity.SaRole;
 import com.example.activityUP.entity.SaUser;
+import com.example.activityUP.entity.Vo.AssginRoleVo;
 import com.example.activityUP.entity.Vo.FormQuery;
+import com.example.activityUP.entity.Vo.SelectedAssign;
 import com.example.activityUP.service.SaRoleService;
 import com.example.activityUP.service.SaUserService;
 import com.example.activityUP.utils.Result;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -72,6 +76,26 @@ public class SaRoleController {
         long total = ceePage.getTotal();
         List<SaRole> list= ceePage.getRecords();
         return result.data("rows",list).data("total",total);
+    }
+
+    @GetMapping("getRoleOptions")
+    public Result getRoleList(@RequestHeader("satoken") String satoken) {
+        // 校验登录
+//        Result result = SaPermission.checkSaPermission(satoken);
+        List<SaRole> list = saRoleService.options();
+        return Result.success().data("list",list);
+    }
+
+    @PostMapping("doAssign")
+    public Result doAssign(@RequestBody AssginRoleVo assginRoleVo) {
+        saRoleService.doAssign(assginRoleVo);
+        return Result.success();
+    }
+
+    @GetMapping("/toAssign/{userId}")
+    public Result toAssign(@PathVariable Long userId) {
+        Map<String, Object> rolesByUserId = saRoleService.getRolesByUserId(userId);
+        return Result.success().data("list",rolesByUserId);
     }
 }
 

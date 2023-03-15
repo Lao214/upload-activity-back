@@ -1,6 +1,7 @@
 package com.example.activityUP.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import java.util.Date;
@@ -39,5 +40,11 @@ public class SaRole implements Serializable {
     private String roleCode;
 
     private Date createTime;
+
+    @TableField(exist = false)
+    private Long value;
+
+    @TableField(exist = false)
+    private String label;
 
 }

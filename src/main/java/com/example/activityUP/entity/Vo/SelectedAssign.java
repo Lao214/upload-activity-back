@@ -15,5 +15,7 @@ import java.util.List;
 public class SelectedAssign {
     List<SaMenu> menuList;
 
+    List<SaMenu> roleList;
+
     List<Long> selectedList;
 }

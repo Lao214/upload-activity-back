@@ -103,5 +103,15 @@ public class SaUserController {
         return result.data("rows",list).data("total",total);
     }
 
+    @DeleteMapping("remove/{id}")
+    public Result remove(@PathVariable Long id) {
+        boolean is_Success = saUserService.removeById(id);
+        if(is_Success) {
+            return Result.success();
+        } else {
+            return Result.error();
+        }
+    }
+
 }
 
