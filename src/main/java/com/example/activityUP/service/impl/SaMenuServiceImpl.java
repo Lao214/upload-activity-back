@@ -98,4 +98,15 @@ public class SaMenuServiceImpl extends ServiceImpl<SaMenuMapper, SaMenu> impleme
         selectedAssign.setSelectedList(selectedList);
         return selectedAssign;
     }
+
+    @Override
+    public List<SaMenu> getUserMenuList(Long id) {
+        return null;
+    }
+
+    @Override
+    public List<String> getUserPerList(Object id) {
+        List<String> perListUserId = baseMapper.findPerListUserId(id);
+        return perListUserId;
+    }
 }

@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface SaUserRoleService extends IService<SaUserRole> {
 
+    boolean removeByUserId(Long id);
 }

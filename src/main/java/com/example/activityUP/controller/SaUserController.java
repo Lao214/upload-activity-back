@@ -9,8 +9,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.activityUP.entity.SaUser;
+import com.example.activityUP.entity.SaUserRole;
 import com.example.activityUP.entity.Vo.FormQuery;
 import com.example.activityUP.entity.Vo.LoginForm;
+import com.example.activityUP.service.SaUserRoleService;
 import com.example.activityUP.service.SaUserService;
 import com.example.activityUP.utils.Result;
 import com.example.activityUP.utils.SaPermission;
@@ -36,6 +38,9 @@ public class SaUserController {
 
     @Autowired
     private  SaUserService saUserService;
+
+    @Autowired
+    private SaUserRoleService saUserRoleService;
 
     @PostMapping("doLogin")
     public Result doLogin(@RequestBody LoginForm loginForm) {
@@ -64,6 +69,13 @@ public class SaUserController {
         userForm.setPassword(SaSecureUtil.md5(userForm.getPassword()));
         userForm.setCreateTime(new Date());
         userForm.setUpdateTime(new Date());
+        /** 默认普通用户 **/
+        userForm.setGrade("[普通用户]");
+        SaUserRole saUserRole = new SaUserRole();
+        saUserRole.setUserId(userForm.getId());
+        saUserRole.setStatus(1);
+        saUserRole.setRoleId(2l);
+        saUserRoleService.save(saUserRole);
         boolean save = saUserService.save(userForm);
         if (save) {
             return result.success().data("data",userForm);
@@ -107,6 +119,7 @@ public class SaUserController {
     public Result remove(@PathVariable Long id) {
         boolean is_Success = saUserService.removeById(id);
         if(is_Success) {
+            saUserRoleService.removeByUserId(id);
             return Result.success();
         } else {
             return Result.error();

@@ -26,4 +26,8 @@ public interface SaMenuService extends IService<SaMenu> {
     //根据角色分配菜单
     SelectedAssign findMenuByRoleId(Long roleId);
 
+    List<SaMenu> getUserMenuList(Long id);
+
+    List<String> getUserPerList(Object id);
+
 }

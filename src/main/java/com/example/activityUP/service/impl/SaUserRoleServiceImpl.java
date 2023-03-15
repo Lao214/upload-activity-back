@@ -4,6 +4,7 @@ import com.example.activityUP.entity.SaUserRole;
 import com.example.activityUP.mapper.SaUserRoleMapper;
 import com.example.activityUP.service.SaUserRoleService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,4 +18,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class SaUserRoleServiceImpl extends ServiceImpl<SaUserRoleMapper, SaUserRole> implements SaUserRoleService {
 
+
+
+    @Override
+    public boolean removeByUserId(Long id) {
+        return baseMapper.removeByUserId(id);
+    }
 }

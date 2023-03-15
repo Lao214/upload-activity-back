@@ -2,8 +2,36 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.activityUP.mapper.SaMenuMapper">
 
+    <resultMap id="saMenuMap" type="com.example.activityUP.entity.SaMenu" autoMapping="true"></resultMap>
+
     <select id="findAllMenu" resultType="com.example.activityUP.entity.SaMenu">
         select id,menu_value,level,parent_id,menu_name as label from sa_menu
+    </select>
+
+    <!--//根据userid查找菜单权限数据-->
+    <select id="findMenuListUserId" resultMap="saMenuMap">
+        SELECT DISTINCT
+        m.id,
+        m.parent_id,
+        m.menu_name,
+        m.type,
+        m.router,
+        m.level,
+        m.menu_value,
+        m.status FROM sa_menu m
+        INNER JOIN sa_role_menu rm ON m.id=rm.menu_id
+        INNER JOIN sa_user_role ur ON rm.role_id=ur.role_id
+        WHERE ur.user_id = #{userId}
+        AND m.status = 1
+    </select>
+
+    <select id="findPerListUserId" resultType="java.lang.Object">
+        SELECT DISTINCT
+        m.menu_value FROM sa_menu m
+        INNER JOIN sa_role_menu rm ON m.id=rm.menu_id
+        INNER JOIN sa_user_role ur ON rm.role_id=ur.role_id
+        WHERE ur.user_id = #{userId}
+        AND m.status = 1
     </select>
 
 </mapper>
