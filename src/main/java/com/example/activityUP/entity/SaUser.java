@@ -55,9 +55,9 @@ public class SaUser implements Serializable {
 
     private String grade;
 
-    private String gradeDepart;
+    private String factory;
 
-    private String hrtype;
+    private String department;
 
     private String sex;
 
@@ -68,6 +68,9 @@ public class SaUser implements Serializable {
 
     //(value = "头像")
     private String avatar;
+
+    //分机电话
+    private String telephone;
 
     //(value = "来源")
     private String source;

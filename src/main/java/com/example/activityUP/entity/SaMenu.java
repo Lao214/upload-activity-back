@@ -53,4 +53,10 @@ public class SaMenu implements Serializable {
 
     @TableField(exist = false)
     private List<SaMenu> children;
+
+    @TableField(exist = false)
+    private boolean isSelect;
+
+    @TableField(exist = false)
+    private String label;
 }
