@@ -23,8 +23,8 @@ public class SaUser implements Serializable {
     private static final long serialVersionUID = 1L;
 
 
-    @TableId(value = "id", type = IdType.ID_WORKER)
-    private String id;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
     private String username;
 
@@ -49,8 +49,6 @@ public class SaUser implements Serializable {
     private String unit;
 
     private String realName;
-
-    private String role;
 
     //(value = "区域")
     private String area;

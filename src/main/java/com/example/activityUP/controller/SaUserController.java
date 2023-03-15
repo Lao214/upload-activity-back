@@ -59,8 +59,8 @@ public class SaUserController {
 
     @PostMapping("addUser")
     public Result addUser(@RequestBody SaUser userForm, @RequestHeader("satoken") String satoken){
-        // 校验登录并鉴权
-        Result result = SaPermission.checkSaPermission(satoken, "user.add");
+        // 校验登录
+        Result result = SaPermission.checkSaPermission(satoken);
         userForm.setPassword(SaSecureUtil.md5(userForm.getPassword()));
         userForm.setCreateTime(new Date());
         userForm.setUpdateTime(new Date());
@@ -68,14 +68,28 @@ public class SaUserController {
         if (save) {
             return result.success().data("data",userForm);
         } else {
-            return result.success().msg("插入失败");
+            return result.success().msg("添加失败");
+        }
+    }
+
+    @PostMapping("updateUser")
+    public Result updateUser(@RequestBody SaUser updateForm, @RequestHeader("satoken") String satoken){
+        // 校验登录
+        Result result = SaPermission.checkSaPermission(satoken);
+//        updateForm.setPassword(SaSecureUtil.md5(updateForm.getPassword()));
+        updateForm.setUpdateTime(new Date());
+        boolean save = saUserService.updateById(updateForm);
+        if (save) {
+            return result.success().data("data",updateForm);
+        } else {
+            return result.success().msg("修改失败");
         }
     }
 
     @PostMapping("getFormDataListPage/{current}/{limit}")
     public Result getFormDataListPage(@PathVariable long current, @PathVariable long limit, @RequestBody(required = false) FormQuery formQuery,@RequestHeader("satoken") String satoken) {
-        // 校验登录并鉴权
-        Result result = SaPermission.checkSaPermission(satoken, "user.list");
+        // 校验登录
+        Result result = SaPermission.checkSaPermission(satoken);
         /**创建page对象**/
         Page<SaUser> ceePage = new Page<>(current,limit);
         /**构建条件**/

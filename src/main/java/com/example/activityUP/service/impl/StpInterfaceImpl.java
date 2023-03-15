@@ -21,11 +21,8 @@ public class StpInterfaceImpl implements StpInterface {
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
         // 本list仅做模拟，实际项目中要根据具体业务逻辑来查询权限
+
         List<String> list = new ArrayList<String>();
-        if(loginId.toString().equals("1635211305751166978")){
-            list.add("user.add");
-            list.add("user.list");
-        }
         return list;
     }
 
