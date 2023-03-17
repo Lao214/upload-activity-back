@@ -62,6 +62,23 @@ public class SaUserController {
         }
     }
 
+    @GetMapping("getUserInfo")
+    public Result getUserInfo(@RequestHeader("satoken") String satoken) {
+        // 校验登录
+        Result result = SaPermission.checkSaPermission(satoken);
+        if(result.getCode() != 200) {
+            return result;
+        }
+        Object loginIdByToken = StpUtil.getLoginIdByToken(satoken);
+        SaUser one = saUserService.getById(loginIdByToken.toString());
+        if(one != null) {
+            return Result.success().data("userInfo",one);
+        }else  {
+            // 用户不存在
+            return Result.error().code(500).msg("用户名或密码不存在");
+        }
+    }
+
     @PostMapping("addUser")
     public Result addUser(@RequestBody SaUser userForm, @RequestHeader("satoken") String satoken){
         // 校验登录
@@ -69,6 +86,7 @@ public class SaUserController {
         userForm.setPassword(SaSecureUtil.md5(userForm.getPassword()));
         userForm.setCreateTime(new Date());
         userForm.setUpdateTime(new Date());
+        boolean save = saUserService.save(userForm);
         /** 默认普通用户 **/
         userForm.setGrade("[普通用户]");
         SaUserRole saUserRole = new SaUserRole();
@@ -76,7 +94,6 @@ public class SaUserController {
         saUserRole.setStatus(1);
         saUserRole.setRoleId(2l);
         saUserRoleService.save(saUserRole);
-        boolean save = saUserService.save(userForm);
         if (save) {
             return result.success().data("data",userForm);
         } else {
@@ -92,9 +109,9 @@ public class SaUserController {
         updateForm.setUpdateTime(new Date());
         boolean save = saUserService.updateById(updateForm);
         if (save) {
-            return result.success().data("data",updateForm);
+            return result.data("data",updateForm);
         } else {
-            return result.success().msg("修改失败");
+            return result.msg("修改失败");
         }
     }
 

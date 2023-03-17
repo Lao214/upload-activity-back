@@ -38,12 +38,7 @@ public class SaUser implements Serializable {
     //(value = "手机号")
     private String phone;
 
-
-    private String jobNo;
-
-
     private String sign;
-
 
     private String unit;
 
