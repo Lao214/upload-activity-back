@@ -15,6 +15,8 @@ import java.util.Date;
 @Data
 public class InsertActivityDTO {
 
+    private static final long serialVersionUID = 1L;
+
     /** 录入项目ID **/
     private Long enterProjectId;
 
@@ -37,9 +39,9 @@ public class InsertActivityDTO {
     private String enterJobNo;
 
     /**  起止时间 **/
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd" , timezone = "GMT+8")
+
     public Date beginTime;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd" , timezone = "GMT+8")
+
     public Date endTime;
 
     /** 参与人员工号 **/
@@ -52,6 +54,5 @@ public class InsertActivityDTO {
     private String certificate;
 
     /** 获得证书时间 **/
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd" , timezone = "GMT+8")
     private Date beRewardedTime;
 }

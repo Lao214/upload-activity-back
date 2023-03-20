@@ -4,6 +4,8 @@ package com.example.activityUP.controller;
 import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.util.MapUtils;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.activityUP.entity.*;
@@ -21,9 +23,14 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -111,6 +118,88 @@ public class SysActivityController {
         return result.data("list",projectActivityList).data("total",total);
     }
 
+    /**
+     * @description:  导出项目的 活动资料 （分页）
+     * @param:
+     * @return:
+     * @author 劳威锟
+     * @date: 2023/3/18 3:42 PM
+     */
+    @GetMapping("downloadFormDataListPage/{current}/{limit}")
+    public void downloadFormDataListPage(HttpServletResponse response, @PathVariable long current, @PathVariable long limit, @ModelAttribute FormQuery formQuery) throws IOException  {
+        /** sql limit分页和前端分页逻辑稍有差别 **/
+        /** 分页计算，如果当前页（current）小于等于1，给xml处理时就变为0，意思是过滤0条数据 **/
+        /** 分页计算，如果当前页（current）大于1，给xml处理时就自-1 然后乘limit，才能得到当前页所显示的数据 **/
+        if(current <= 1) {
+            current = 0;
+        } else {
+            current = (current -1) * limit;
+        }
+        List<ActivityVo> projectActivityList = sysActivityService.getProjectActivityList(current, limit, formQuery.getId());
+        /** total 为所有记录 **/
+
+        try {
+            // 这里注意 有同学反应使用swagger 会导致各种问题，请直接用浏览器或者用postman
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setCharacterEncoding("utf-8");
+
+            Date date = new Date();
+            DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            String strDate = dateformat.format(date);
+            // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
+            String fileName = URLEncoder.encode(strDate, "UTF-8").replaceAll("\\+", "%20");
+            response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
+            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+            EasyExcel.write(response.getOutputStream(), ActivityVo.class).autoCloseStream(Boolean.FALSE).sheet("模板").doWrite(projectActivityList);
+        }
+        catch (IOException e) { //下载失败情况的处理
+            // 重置response
+            response.reset();
+            response.setContentType("application/json");
+            response.setCharacterEncoding("utf-8");
+            Map<String, String> map = MapUtils.newHashMap();
+            map.put("status", "failure");
+            map.put("message", "下载文件失败" + e.getMessage());
+            response.getWriter().println(JSON.toJSONString(map));
+        }
+    }
+
+    /**
+     * @description:  导出项目的 活动资料 全部
+     * @param:
+     * @return:
+     * @author 劳威锟
+     * @date: 2023/3/18 3:42 PM
+     */
+    @GetMapping("downloadFormDataListAll")
+    public void downloadFormDataListAll(HttpServletResponse response, @ModelAttribute FormQuery formQuery) throws IOException  {
+        List<ActivityVo> projectActivityList = sysActivityService.getProjectActivityList(0, 99999, formQuery.getId());
+        try {
+            // 这里注意 有同学反应使用swagger 会导致各种问题，请直接用浏览器或者用postman
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setCharacterEncoding("utf-8");
+
+            Date date = new Date();
+            DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            String strDate = dateformat.format(date);
+            // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
+            String fileName = URLEncoder.encode(strDate, "UTF-8").replaceAll("\\+", "%20");
+            response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
+            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+            EasyExcel.write(response.getOutputStream(), ActivityVo.class).autoCloseStream(Boolean.FALSE).sheet("模板").doWrite(projectActivityList);
+        }
+        catch (IOException e) { //下载失败情况的处理
+            // 重置response
+            response.reset();
+            response.setContentType("application/json");
+            response.setCharacterEncoding("utf-8");
+            Map<String, String> map = MapUtils.newHashMap();
+            map.put("status", "failure");
+            map.put("message", "下载文件失败" + e.getMessage());
+            response.getWriter().println(JSON.toJSONString(map));
+        }
+    }
+
     @PostMapping("getAuditList/{current}/{limit}")
     public Result getAuditList(@PathVariable long current, @PathVariable long limit, @RequestBody(required = false) FormQuery formQuery, @RequestHeader("satoken") String satoken) {
         // 校验登录
@@ -131,6 +220,42 @@ public class SysActivityController {
         long total = ceePage.getTotal();
         List<SysActivity> list= ceePage.getRecords();
         return result.data("rows",list).data("total",total);
+    }
+
+    @GetMapping("downloadAuditList")
+    public void downloadAuditList(HttpServletResponse response,@ModelAttribute  FormQuery formQuery) throws IOException  {
+        /**构建条件**/
+        QueryWrapper<SysActivity> queryWrapper =new QueryWrapper<>();
+        // 根据录入id查询
+        queryWrapper.eq("enter_id",formQuery.getId());
+        //排序 根据创建时间降序
+        queryWrapper.orderByAsc("id");
+        List<SysActivity> list = sysActivityService.list(queryWrapper);
+
+        try {
+            // 这里注意 有同学反应使用swagger 会导致各种问题，请直接用浏览器或者用postman
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setCharacterEncoding("utf-8");
+
+            Date date = new Date();
+            DateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            String strDate = dateformat.format(date);
+            // 这里URLEncoder.encode可以防止中文乱码 当然和easyexcel没有关系
+            String fileName = URLEncoder.encode(strDate, "UTF-8").replaceAll("\\+", "%20");
+            response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
+            response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+            EasyExcel.write(response.getOutputStream(), SysActivity.class).autoCloseStream(Boolean.FALSE).sheet("模板").doWrite(list);
+        }
+        catch (IOException e) { //下载失败情况的处理
+            // 重置response
+            response.reset();
+            response.setContentType("application/json");
+            response.setCharacterEncoding("utf-8");
+            Map<String, String> map = MapUtils.newHashMap();
+            map.put("status", "failure");
+            map.put("message", "下载文件失败" + e.getMessage());
+            response.getWriter().println(JSON.toJSONString(map));
+        }
     }
 
     /**
