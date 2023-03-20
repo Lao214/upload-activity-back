@@ -86,9 +86,9 @@ public class SaUserController {
         userForm.setPassword(SaSecureUtil.md5(userForm.getPassword()));
         userForm.setCreateTime(new Date());
         userForm.setUpdateTime(new Date());
-        boolean save = saUserService.save(userForm);
         /** 默认普通用户 **/
         userForm.setGrade("[普通用户]");
+        boolean save = saUserService.save(userForm);
         SaUserRole saUserRole = new SaUserRole();
         saUserRole.setUserId(userForm.getId());
         saUserRole.setStatus(1);

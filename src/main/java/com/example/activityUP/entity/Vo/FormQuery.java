@@ -12,6 +12,8 @@ import lombok.Data;
 @Data
 public class FormQuery {
 
+    private Long id;
+
     //(value = "问卷名称，模糊查询")
     private String name;
 

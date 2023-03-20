@@ -58,10 +58,14 @@ public class SysProjectController {
     public Result getFormDataListPage(@PathVariable long current, @PathVariable long limit, @RequestBody(required = false) FormQuery formQuery, @RequestHeader("satoken") String satoken) {
         // 校验登录
         Result result = SaPermission.checkSaPermission(satoken);
+        if(result.getCode() != 200) {
+            return result;
+        }
         /**创建page对象**/
         Page<SysProject> ceePage = new Page<>(current,limit);
         /**构建条件**/
         QueryWrapper<SysProject> queryWrapper =new QueryWrapper<>();
+        queryWrapper.eq("create_user_id",formQuery.getId());
         //排序 根据创建时间降序
         queryWrapper.orderByDesc("create_time");
         sysProjectService.page(ceePage,queryWrapper);
@@ -70,6 +74,7 @@ public class SysProjectController {
         List<SysProject> list= ceePage.getRecords();
         return result.data("rows",list).data("total",total);
     }
+
 
 }
 

@@ -2,4 +2,36 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.activityUP.mapper.SysActivityMapper">
 
+    <resultMap id="sysActivityMap" type="com.example.activityUP.entity.Vo.ActivityVo" autoMapping="true"></resultMap>
+
+    <select id="getProjectActivityList" resultMap="sysActivityMap">
+        SELECT
+        sa.id,
+        sa.job_no,
+        sa.participant_name,
+        sa.certificate,
+        sea.enter_user_name,
+        sea.enter_job_no,
+        sa.be_rewarded_time,
+        sea.enter_time,
+        sea.begin_time,
+        sea.end_time,
+        sea.status,
+        sea.audit_user_id,
+        sea.audit_user_name,
+        sea.audit_time
+        FROM  sys_activity sa
+        inner join sys_enter_activity sea on sa.enter_id  = sea.id
+        WHERE sea.enter_project_id = #{id}
+        ORDER BY sea.enter_time DESC
+        LIMIT #{offset},#{limit}
+    </select>
+
+    <select id="getTotalActivityCount" resultType="java.lang.Long">
+        SELECT
+        count(*)
+        FROM  sys_activity sa
+        inner join sys_enter_activity sea on sa.enter_id  = sea.id
+        WHERE sea.enter_project_id = #{id}
+    </select>
 </mapper>
