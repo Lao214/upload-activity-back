@@ -108,7 +108,10 @@
 
 	</dependencies>
 
+
+	<!-- 项目打包时会将java目录中的*.xml文件也进行打包 -->
 	<build>
+		<finalName>activityUP</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -123,6 +126,16 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/*.xml</include>
+					<include>**/*.properties</include>
+				</includes>
+				<filtering>false</filtering>
+			</resource>
+		</resources>
 	</build>
 
 </project>
