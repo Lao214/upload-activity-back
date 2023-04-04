@@ -13,6 +13,7 @@
         sea.enter_user_name,
         sea.enter_job_no,
         sa.be_rewarded_time,
+        sa.enter_id,
         sea.enter_time,
         sea.begin_time,
         sea.end_time,

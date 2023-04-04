@@ -32,6 +32,8 @@ import java.util.Date;
 public class ActivityVo {
 
     private Long id;
+    @ExcelProperty("录入ID")
+    private Long enterId;
     @ExcelProperty("参与人员工号")
     private String jobNo;
     @ExcelProperty("参与人员姓名")
