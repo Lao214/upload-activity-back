@@ -20,4 +20,6 @@ public interface SysActivityMapper extends BaseMapper<SysActivity> {
     List<ActivityVo> getProjectActivityList(@Param("offset") long offset, @Param("limit")long limit, @Param("id")Long id);
 
     Long getTotalActivityCount(Long projectId);
+
+    void deleteByEnterId(Long id);
 }

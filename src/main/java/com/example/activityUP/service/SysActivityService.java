@@ -19,4 +19,6 @@ public interface SysActivityService extends IService<SysActivity> {
     List<ActivityVo>  getProjectActivityList(long offset, long limit, Long projectId);
 
     Long getTotalActivityCount(Long projectId);
+
+    void deleteByEnterId(Long enterId);
 }

@@ -29,4 +29,9 @@ public class SysActivityServiceImpl extends ServiceImpl<SysActivityMapper, SysAc
     public Long getTotalActivityCount(Long projectId) {
         return baseMapper.getTotalActivityCount(projectId);
     }
+
+    @Override
+    public void deleteByEnterId(Long enterId) {
+        baseMapper.deleteByEnterId(enterId);
+    }
 }

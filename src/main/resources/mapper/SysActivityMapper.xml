@@ -35,4 +35,9 @@
         inner join sys_enter_activity sea on sa.enter_id  = sea.id
         WHERE sea.enter_project_id = #{id}
     </select>
+
+
+    <delete id="deleteByEnterId">
+        delete from sys_activity where enter_id = #{id}
+    </delete>
 </mapper>

@@ -309,6 +309,37 @@ public class SysActivityController {
         }
     }
 
+    @DeleteMapping("deleteEnter/{enterId}")
+    public Result deleteEnter(@PathVariable Long enterId) {
+        boolean del = sysEnterActivityService.removeById(enterId);
+        sysActivityService.deleteByEnterId(enterId);
+        if(del) {
+            return Result.success().msg("删除成功");
+        } else {
+            return Result.error().msg("删除失败");
+        }
+    }
+
+    @DeleteMapping("deleteActivity/{id}")
+    public Result deleteActivity(@PathVariable Long id) {
+        boolean del = sysActivityService.removeById(id);
+        if(del) {
+            return Result.success().msg("删除成功");
+        } else {
+            return Result.error().msg("删除失败");
+        }
+    }
+
+
+    @PostMapping("updateActivity")
+    public Result deleteActivity(@RequestBody SysActivity sysActivity) {
+        boolean update = sysActivityService.updateById(sysActivity);
+        if(update) {
+            return Result.success().msg("修改成功");
+        } else {
+            return Result.error().msg("修改失败");
+        }
+    }
 
 }
 
