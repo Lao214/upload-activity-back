@@ -285,8 +285,8 @@ public class SysActivityController {
         // 录入人员姓名
         sysEnterActivity.setEnterJobNo(insertActivityDTO.getEnterJobNo());
         // 起始时间
-        sysEnterActivity.setBeginTime(insertActivityDTO.getBeginTime());
-        sysEnterActivity.setEndTime(insertActivityDTO.getEndTime());
+//        sysEnterActivity.setBeginTime(insertActivityDTO.getBeginTime());
+//        sysEnterActivity.setEndTime(insertActivityDTO.getEndTime());
         // 默认状态未审核
         sysEnterActivity.setStatus(0);
         sysEnterActivity.setEnterTime(new Date());
