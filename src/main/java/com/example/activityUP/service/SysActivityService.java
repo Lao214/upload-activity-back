@@ -21,4 +21,7 @@ public interface SysActivityService extends IService<SysActivity> {
     Long getTotalActivityCount(Long projectId);
 
     void deleteByEnterId(Long enterId);
+
+    /** 批量导入 插入或忽略插入 **/
+    void insertBatchOrUpdate(List<SysActivity> dataList);
 }

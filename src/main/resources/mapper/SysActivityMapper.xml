@@ -40,4 +40,12 @@
     <delete id="deleteByEnterId">
         delete from sys_activity where enter_id = #{id}
     </delete>
+
+    <insert id="insertBatchOrUpdate" parameterType="java.util.List">
+        INSERT IGNORE INTO sys_activity (job_no,participant_name,certificate,be_rewarded_time,project_id,enter_id,others)
+        VALUES
+        <foreach collection ="dataList" item="data" separator =",">
+            (#{data.jobNo}, #{data.participantName}, #{data.certificate},#{data.beRewardedTime},#{data.projectId},#{data.enterId},#{data.others})
+        </foreach >
+    </insert>
 </mapper>

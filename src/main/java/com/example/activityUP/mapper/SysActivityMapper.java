@@ -22,4 +22,6 @@ public interface SysActivityMapper extends BaseMapper<SysActivity> {
     Long getTotalActivityCount(Long projectId);
 
     void deleteByEnterId(Long id);
+
+    void insertBatchOrUpdate(@Param("dataList") List<SysActivity> dataList);
 }

@@ -1,8 +1,5 @@
 package com.example.activityUP.controller;
 
-
-import cn.dev33.satoken.secure.SaSecureUtil;
-import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.util.MapUtils;
 import com.alibaba.fastjson.JSON;
@@ -83,7 +80,7 @@ public class SysActivityController {
         enterActivity.setEndTime(uploadActivityDTO.getEndTime());
         boolean save = sysEnterActivityService.save(enterActivity);
         if(save) {
-            EasyExcel.read(file.getInputStream(), SysActivity.class, new UploadDataListener(sysActivityService,enterActivity.getId())).sheet().doRead();
+            EasyExcel.read(file.getInputStream(), SysActivity.class, new UploadDataListener(sysActivityService,enterActivity.getId(),enterActivity.getEnterProjectId())).sheet().doRead();
         } else {
             return Result.error().msg("导入失败");
         }
@@ -298,6 +295,7 @@ public class SysActivityController {
             sysActivity.setParticipantName(insertActivityDTO.getParticipantName());
             sysActivity.setCertificate(insertActivityDTO.getCertificate());
             sysActivity.setBeRewardedTime(insertActivityDTO.getBeRewardedTime());
+            sysActivity.setProjectId(insertActivityDTO.getEnterProjectId());
             boolean saveFlag = sysActivityService.save(sysActivity);
             if(saveFlag) {
                 return result.data("sysEnterActivity",sysEnterActivity).data("sysActivity",sysActivity);

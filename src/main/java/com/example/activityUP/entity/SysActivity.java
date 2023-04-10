@@ -63,6 +63,8 @@ public class SysActivity implements Serializable {
     //(value = "录入编号")
     private Long enterId;
 
+    private Long projectId;
+
     private String others;
 
 

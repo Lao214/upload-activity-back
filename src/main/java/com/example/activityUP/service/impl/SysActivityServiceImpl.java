@@ -34,4 +34,9 @@ public class SysActivityServiceImpl extends ServiceImpl<SysActivityMapper, SysAc
     public void deleteByEnterId(Long enterId) {
         baseMapper.deleteByEnterId(enterId);
     }
+
+    @Override
+    public void insertBatchOrUpdate(List<SysActivity> dataList) {
+        baseMapper.insertBatchOrUpdate(dataList);
+    }
 }

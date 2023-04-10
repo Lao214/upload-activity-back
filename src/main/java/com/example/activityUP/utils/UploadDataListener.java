@@ -32,15 +32,17 @@ public class UploadDataListener implements ReadListener<SysActivity> {
 
     private Long enterId;
 
+    private Long projectId;
+
     /**
      * 如果使用了spring,请使用这个构造方法。每次创建Listener的时候需要把spring管理的类传进来
      *
      * @param sysActivityService
      */
-    public UploadDataListener(SysActivityService sysActivityService,Long enterId) {
+    public UploadDataListener(SysActivityService sysActivityService,Long enterId,Long projectId) {
         this.sysActivityService = sysActivityService;
         this.enterId = enterId;
-
+        this.projectId = projectId;
     }
 
     /**
@@ -77,11 +79,12 @@ public class UploadDataListener implements ReadListener<SysActivity> {
      * 加上存储数据库
      */
     private void saveData() {
-        log.info("{}条数据，开始存储数据库！", cachedDataList.size());
+        log.info("{}条数据，开始存储数据库！(这是Excel表格的行数，不是实际上存储的数目)", cachedDataList.size());
         for (SysActivity activity: cachedDataList) {
             activity.setEnterId(enterId);
+            activity.setProjectId(projectId);
         }
-        sysActivityService.saveBatch(cachedDataList);
+        sysActivityService.insertBatchOrUpdate(cachedDataList);
         log.info("存储数据库成功！");
     }
 }
