@@ -9,6 +9,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -55,6 +57,7 @@ public class SysActivity implements Serializable {
 
     //(value = "获得证书时间")
     @ExcelProperty("证书获得时间")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd" , timezone = "GMT+8")
     private Date beRewardedTime;
 
     //(value = "录入编号")

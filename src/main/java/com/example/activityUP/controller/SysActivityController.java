@@ -333,6 +333,9 @@ public class SysActivityController {
 
     @PostMapping("updateActivity")
     public Result deleteActivity(@RequestBody SysActivity sysActivity) {
+        if(sysActivity.getBeRewardedTime() == null) {
+            sysActivity.setBeRewardedTime(new Date(0l));
+        }
         boolean update = sysActivityService.updateById(sysActivity);
         if(update) {
             return Result.success().msg("修改成功");
