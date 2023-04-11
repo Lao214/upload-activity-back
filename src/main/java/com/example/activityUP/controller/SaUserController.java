@@ -115,6 +115,33 @@ public class SaUserController {
         }
     }
 
+    @PostMapping("updatePassword")
+    public Result updatePassword(@RequestBody SaUser form, @RequestHeader("satoken") String satoken){
+        // 校验登录
+        Result result = SaPermission.checkSaPermission(satoken);
+        form.setUpdateTime(new Date());
+        // 校验原密码
+        QueryWrapper<SaUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username",form.getUsername());
+        queryWrapper.eq("password",SaSecureUtil.md5(form.getPassword()));
+        SaUser one = saUserService.getOne(queryWrapper);
+        if(one != null) {
+            SaUser saUser = new SaUser();
+            saUser.setId(form.getId());
+            saUser.setPassword(SaSecureUtil.md5(form.getNewPwd()));
+            boolean update = saUserService.updateById(saUser);
+            if(update) {
+                return Result.success().msg("修改成功");
+            } else  {
+                return Result.error().code(500).msg("修改失败");
+            }
+        }else  {
+            // 用户不存在
+            return Result.error().code(500).msg("原密码输入错误");
+        }
+
+    }
+
     @PostMapping("getFormDataListPage/{current}/{limit}")
     public Result getFormDataListPage(@PathVariable long current, @PathVariable long limit, @RequestBody(required = false) FormQuery formQuery,@RequestHeader("satoken") String satoken) {
         // 校验登录
