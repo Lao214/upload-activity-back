@@ -342,5 +342,13 @@ public class SysActivityController {
         }
     }
 
+    @GetMapping("getCount/{id}")
+    public Result getCount(@PathVariable Long id) {
+        QueryWrapper<SysActivity>  queryWrapper = new QueryWrapper<SysActivity>();
+        queryWrapper.eq("project_id", id);
+        int count = sysActivityService.count(queryWrapper);
+        return Result.success().data("count",count);
+    }
+
 }
 
