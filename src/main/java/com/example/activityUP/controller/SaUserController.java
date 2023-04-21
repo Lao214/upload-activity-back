@@ -5,21 +5,29 @@ import cn.dev33.satoken.secure.SaSecureUtil;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.util.SaResult;
+import com.alibaba.excel.EasyExcel;
 import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.activityUP.entity.DTO.UploadActivityDTO;
 import com.example.activityUP.entity.SaUser;
 import com.example.activityUP.entity.SaUserRole;
+import com.example.activityUP.entity.SysActivity;
+import com.example.activityUP.entity.SysEnterActivity;
 import com.example.activityUP.entity.Vo.FormQuery;
 import com.example.activityUP.entity.Vo.LoginForm;
 import com.example.activityUP.service.SaUserRoleService;
 import com.example.activityUP.service.SaUserService;
 import com.example.activityUP.utils.Result;
 import com.example.activityUP.utils.SaPermission;
+import com.example.activityUP.utils.UploadDataListener;
+import com.example.activityUP.utils.UploadUserListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -168,6 +176,21 @@ public class SaUserController {
         } else {
             return Result.error();
         }
+    }
+
+    /**
+     * 文件上传 批量插入 活动资料
+     * <p>1. 创建excel对应的实体对象 参照{@link }
+     * <p>2. 由于默认一行行的读取excel，所以需要创建excel一行一行的回调监听器，参照{@link UploadDataListener}
+     * <p>3. 直接读即可
+     */
+    @PostMapping("upload")
+    @ResponseBody
+    public Result upload(@RequestPart("file") MultipartFile file, @RequestHeader("satoken") String satoken) throws IOException {
+        // 校验登录
+        Result result = SaPermission.checkSaPermission(satoken);
+        EasyExcel.read(file.getInputStream(), SaUser.class, new UploadUserListener(saUserService,saUserRoleService)).sheet().doRead();
+        return result;
     }
 
 }

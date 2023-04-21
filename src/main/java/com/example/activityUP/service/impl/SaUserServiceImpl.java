@@ -8,6 +8,8 @@ import com.example.activityUP.mapper.SaUserMapper;
 import com.example.activityUP.service.SaUserService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务实现类
@@ -19,4 +21,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class SaUserServiceImpl extends ServiceImpl<SaUserMapper, SaUser> implements SaUserService {
 
+    @Override
+    public boolean insertBatchOrUpdate(List<SaUser> cachedDataList) {
+        return baseMapper.insertBatchOrUpdate(cachedDataList);
+    }
 }

@@ -3,6 +3,9 @@ package com.example.activityUP.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.activityUP.entity.SaUser;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -14,4 +17,5 @@ import com.example.activityUP.entity.SaUser;
  */
 public interface SaUserMapper extends BaseMapper<SaUser> {
 
+    boolean insertBatchOrUpdate(@Param("dataList")List<SaUser> cachedDataList);
 }

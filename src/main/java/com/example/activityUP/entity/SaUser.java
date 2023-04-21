@@ -1,5 +1,10 @@
 package com.example.activityUP.entity;
 
+import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
+import com.alibaba.excel.annotation.ExcelProperty;
+import com.alibaba.excel.annotation.write.style.ColumnWidth;
+import com.alibaba.excel.annotation.write.style.ContentRowHeight;
+import com.alibaba.excel.annotation.write.style.HeadRowHeight;
 import com.baomidou.mybatisplus.annotation.IdType;
 import java.util.Date;
 
@@ -8,6 +13,9 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldNameConstants;
 
 /**
  * <p>
@@ -17,7 +25,13 @@ import lombok.EqualsAndHashCode;
  * @author 劳威锟
  * @since 2023-03-13
  */
-@Data
+@Getter
+@Setter
+@ExcelIgnoreUnannotated
+@ContentRowHeight(21)
+@HeadRowHeight(30)
+@ColumnWidth(15)
+@FieldNameConstants
 @EqualsAndHashCode(callSuper = false)
 public class SaUser implements Serializable {
 
@@ -26,7 +40,7 @@ public class SaUser implements Serializable {
 
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
-
+    @ExcelProperty("工号")
     private String username;
 
     private String password;
@@ -42,8 +56,10 @@ public class SaUser implements Serializable {
 
     private String sign;
 
+    @ExcelProperty("事业群")
     private String unit;
 
+    @ExcelProperty("姓名")
     private String realName;
 
     //(value = "区域")
@@ -53,6 +69,7 @@ public class SaUser implements Serializable {
 
     private String factory;
 
+    @ExcelProperty("部门")
     private String department;
 
     private String sex;
@@ -74,5 +91,6 @@ public class SaUser implements Serializable {
     @TableField(exist = false)
     private String newPwd;
 
-
+    @ExcelProperty("处级单位")
+    private String businessUnit;
 }

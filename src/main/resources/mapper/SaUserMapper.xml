@@ -2,4 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.activityUP.mapper.SaUserMapper">
 
+
+    <insert id="insertBatchOrUpdate" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        INSERT IGNORE INTO sa_user (username,real_name,department,unit,business_unit)
+        VALUES
+        <foreach collection ="dataList" item="data" separator =",">
+            (#{data.username}, #{data.realName}, #{data.department},#{data.unit},#{data.businessUnit})
+        </foreach >
+    </insert>
+
 </mapper>
