@@ -80,9 +80,14 @@ public class SysActivityController {
         enterActivity.setEndTime(uploadActivityDTO.getEndTime());
         boolean save = sysEnterActivityService.save(enterActivity);
         if(save) {
-            EasyExcel.read(file.getInputStream(), SysActivity.class, new UploadDataListener(sysActivityService,enterActivity.getId(),enterActivity.getEnterProjectId())).sheet().doRead();
+            try {
+                EasyExcel.read(file.getInputStream(), SysActivity.class, new UploadDataListener(sysActivityService,enterActivity.getId(),enterActivity.getEnterProjectId())).sheet().doRead();
+            } catch (Exception e) {
+                // 处理异常，比如记录日志，返回错误信息等
+                return Result.error().msg("导入失败：可能存在格式错误，或者模版错误,对于日期列没有数据可以不填");
+            }
         } else {
-            return Result.error().msg("导入失败");
+            return Result.error().msg("导入失败，可能存在格式错误，或者模版错误");
         }
         return result;
     }

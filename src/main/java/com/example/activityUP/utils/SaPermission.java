@@ -36,12 +36,12 @@ public class SaPermission {
                         return Result.success().code(401).msg("权限不足请联系管理员");
                     }
                 } else {
-                    return Result.error().msg("找不到您的账号信息，请重新登录");
+                    return Result.error().code(402).msg("找不到您的账号信息，请重新登录");
                 }
             }
             return Result.success();
         } else {
-            return Result.error().msg("找不到您的登录信息，请重新登录");
+            return Result.error().code(402).msg("找不到您的登录信息，请重新登录");
         }
     }
 
@@ -50,18 +50,18 @@ public class SaPermission {
             StpUtil.setTokenValue(satoken);   // 在当前会话中写入 Token 值。
             long tokenTimeout = StpUtil.getTokenTimeout();// 获取当前登录者的 token 剩余有效时间 (单位: 秒)
             if(tokenTimeout < 0) {
-                return Result.error().msg("您的登录令牌已经过期，请重新登录");
+                return Result.error().code(402).msg("您的登录令牌已经过期，请重新登录");
             }
             else {
                 /** 获取登录ID **/
                 Object loginIdByToken = StpUtil.getLoginIdByToken(satoken);
                 if(loginIdByToken == null) {
-                    return Result.error().msg("找不到您的账号信息，请重新登录");
+                    return Result.error().code(402).msg("找不到您的账号信息，请重新登录");
                 }
             }
             return Result.success();
         } else {
-            return Result.error().msg("找不到您的登录信息，请重新登录");
+            return Result.error().code(402).msg("找不到您的登录信息，请重新登录");
         }
     }
 }

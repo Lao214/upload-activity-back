@@ -14,11 +14,14 @@ public class TagQuery {
 
     private Long id;
 
-    private String keywordCn;
+    private String searchType;
 
-    private String keywordEn;
+    private String searchTag;
 
-    private String level;
+    private String chooseType;
 
-    private Integer sort;
+    private Long type;
+
+    private Long parentId;
+
 }
