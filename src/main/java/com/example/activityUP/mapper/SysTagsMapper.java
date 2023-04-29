@@ -2,6 +2,9 @@ package com.example.activityUP.mapper;
 
 import com.example.activityUP.entity.SysTags;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface SysTagsMapper extends BaseMapper<SysTags> {
 
+    boolean insertBatchOrUpdate(@Param("dataList")List<SysTags> dataList);
 }

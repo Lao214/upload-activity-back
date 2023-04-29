@@ -1,7 +1,10 @@
 package com.example.activityUP.service;
 
+import com.example.activityUP.entity.SysActivity;
 import com.example.activityUP.entity.SysTags;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2023-04-23
  */
 public interface SysTagsService extends IService<SysTags> {
+
+    /** 批量导入 插入或忽略插入 **/
+    boolean insertBatchOrUpdate(List<SysTags> dataList);
 
 }

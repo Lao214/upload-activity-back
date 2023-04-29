@@ -4,6 +4,7 @@ import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.read.listener.ReadListener;
 import com.alibaba.excel.util.ListUtils;
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.activityUP.entity.SaUser;
 import com.example.activityUP.entity.SaUserRole;
 import com.example.activityUP.entity.SysTags;
@@ -12,6 +13,7 @@ import com.example.activityUP.service.SaUserService;
 import com.example.activityUP.service.SysTagsService;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.List;
 
 // 有个很重要的点 DemoDataListener 不能被spring管理，要每次读取excel都要new,然后里面用到spring可以构造方法传进去
@@ -21,7 +23,7 @@ public class UploadTagListener implements ReadListener<SysTags> {
     /**
      * 每隔5条存储数据库，实际使用中可以100条，然后清理list ，方便内存回收
      */
-    private static final int BATCH_COUNT = 100;
+    private static final int BATCH_COUNT = 10000;
 
     /**
      * 缓存的数据
@@ -78,6 +80,16 @@ public class UploadTagListener implements ReadListener<SysTags> {
      */
     private void saveData() {
         log.info("{}条数据，开始存储数据库！(这是Excel表格的行数，不是实际上存储的数目)", cachedDataList.size());
-        boolean update = sysTagsService.saveBatch(cachedDataList);
+        List<SysTags> typeList = new ArrayList<>();
+        List<SysTags> tagList = new ArrayList<>();
+        for (int i = 0; i < cachedDataList.size();i++) {
+            if (cachedDataList.get(i).getLevel() == 1) {
+                typeList.add(cachedDataList.get(i));
+            } else {
+                tagList.add(cachedDataList.get(i));
+            }
+        }
+        boolean save = sysTagsService.insertBatchOrUpdate(typeList);
+        boolean saveFlag = sysTagsService.insertBatchOrUpdate(tagList);
     }
 }

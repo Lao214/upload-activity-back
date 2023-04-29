@@ -135,5 +135,16 @@ public class SysProjectController {
     }
 
 
+    @PostMapping("findAllProject/{current}/{limit}")
+    public Result findAllProject(@PathVariable long current, @PathVariable long limit, @RequestBody(required = false) FormQuery formQuery, @RequestHeader("satoken") String satoken) {
+        // 校验登录
+        Result result = SaPermission.checkSaPermission(satoken);
+        if(result.getCode() != 200) {
+            return result;
+        }
+        /** 查出所有事业群 **/
+//        sysProjectService.findAllUnit(current,limit,formQuery);
+        return result;
+    }
 }
 

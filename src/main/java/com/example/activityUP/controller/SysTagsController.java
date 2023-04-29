@@ -133,11 +133,15 @@ public class SysTagsController {
      */
     @PostMapping("upload")
     @ResponseBody
-    public Result upload(@RequestPart("file") MultipartFile file, @RequestHeader("satoken") String satoken) throws IOException {
+    public Result upload(@RequestPart("file") MultipartFile file) throws IOException {
         // 校验登录
-        Result result = SaPermission.checkSaPermission(satoken);
-        EasyExcel.read(file.getInputStream(), SaUser.class, new UploadTagListener(sysTagsService)).sheet().doRead();
-        return result;
+        try {
+            EasyExcel.read(file.getInputStream(), SysTags.class, new UploadTagListener(sysTagsService)).sheet().doRead();
+        } catch (Exception e) {
+            // 处理异常，比如记录日志，返回错误信息等
+            return Result.error().msg("导入失败：请查看Excel格式");
+        }
+        return Result.success().msg("导入成功");
     }
 }
 
