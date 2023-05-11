@@ -4,6 +4,7 @@ package com.example.activityUP.controller;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.activityUP.entity.DTO.AllProjectDTO;
 import com.example.activityUP.entity.SaUser;
 import com.example.activityUP.entity.SysActivity;
 import com.example.activityUP.entity.SysEnterActivity;
@@ -135,16 +136,49 @@ public class SysProjectController {
     }
 
 
-    @PostMapping("findAllProject/{current}/{limit}")
-    public Result findAllProject(@PathVariable long current, @PathVariable long limit, @RequestBody(required = false) FormQuery formQuery, @RequestHeader("satoken") String satoken) {
+    @PostMapping("findAllProject")
+    public Result findAllProject(@RequestBody(required = false) AllProjectDTO formQuery, @RequestHeader("satoken") String satoken) {
         // 校验登录
         Result result = SaPermission.checkSaPermission(satoken);
         if(result.getCode() != 200) {
             return result;
         }
         /** 查出所有事业群 **/
-//        sysProjectService.findAllUnit(current,limit,formQuery);
-        return result;
+        List<AllProjectDTO> unitList = sysProjectService.findAllUnit();
+        List<AllProjectDTO> departmentList = sysProjectService.findAllDepartment();
+        Integer id = 1;
+        List<AllProjectDTO> projectList = sysProjectService.findAllProjects(formQuery);
+        for(AllProjectDTO department : departmentList) {
+            List<AllProjectDTO> child = new ArrayList<>();
+            for (int i = 0; i < projectList.size(); i++) {
+                if(projectList.get(i).getDepartment().equals(department.getDepartment())) {
+                    child.add(projectList.get(i));
+                    projectList.get(i).setId(id);
+                    projectList.get(i).setLevel(3);
+                    id++;
+                }
+            }
+            department.setChildren(child);
+            department.setId(id);
+            department.setLevel(2);
+            id++;
+        }
+
+        for(AllProjectDTO unit : unitList) {
+            List<AllProjectDTO> child = new ArrayList<>();
+            for (int i = 0; i < departmentList.size(); i++) {
+                if(departmentList.get(i).getUnit().equals(unit.getUnit())) {
+                    child.add(departmentList.get(i));
+                }
+            }
+            unit.setChildren(child);
+            unit.setDepartment(unit.getUnit());
+            unit.setId(id);
+            unit.setLevel(1);
+            id++;
+        }
+
+        return result.success().data("list",unitList);
     }
 }
 

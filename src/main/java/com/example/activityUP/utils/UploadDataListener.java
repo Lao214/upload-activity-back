@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 // 有个很重要的点 DemoDataListener 不能被spring管理，要每次读取excel都要new,然后里面用到spring可以构造方法传进去
 @Slf4j
@@ -19,7 +21,7 @@ public class UploadDataListener implements ReadListener<SysActivity> {
     /**
      * 每隔5条存储数据库，实际使用中可以100条，然后清理list ，方便内存回收
      */
-    private static final int BATCH_COUNT = 100;
+    private static final int BATCH_COUNT = 1000;
 
     /**
      * 缓存的数据
@@ -54,6 +56,13 @@ public class UploadDataListener implements ReadListener<SysActivity> {
     @Override
     public void invoke(SysActivity data, AnalysisContext context) {
         log.info("解析到一条数据:{}", JSON.toJSONString(data));
+        if(!checkString(data.getJobNo())) {
+            try {
+                throw new MyException("你的工号中有中文字符，请检查");
+            } catch (MyException e) {
+                throw new RuntimeException(e);
+            }
+        }
         cachedDataList.add(data);
         // 达到BATCH_COUNT了，需要去存储一次数据库，防止数据几万条数据在内存，容易OOM
         if (cachedDataList.size() >= BATCH_COUNT) {
@@ -61,6 +70,11 @@ public class UploadDataListener implements ReadListener<SysActivity> {
             // 存储完成清理 list
             cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
         }
+    }
+
+    public static boolean checkString(String str) {
+        String regex = "^[a-zA-Z0-9]*$";
+        return str.matches(regex);
     }
 
     /**

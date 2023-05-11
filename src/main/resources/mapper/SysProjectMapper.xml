@@ -2,4 +2,59 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.activityUP.mapper.SysProjectMapper">
 
+
+    <select id="findAllDepartment" resultMap="projectResultMap">
+        SELECT
+        su.business_unit as 'unit',
+        su.department as 'department'
+        FROM  sys_project sp
+        left join sa_user su on  sp.create_user_id = su.id
+        group by su.business_unit, su.department
+    </select>
+
+    <select id="findAllUnit" resultMap="projectResultMap">
+        SELECT  DISTINCT
+        su.business_unit as 'unit'
+        FROM  sys_project sp
+        left join sa_user su on  sp.create_user_id = su.id
+    </select>
+
+    <select id="findAllProjects" resultMap="projectResultMap">
+        SELECT
+        su.username as 'username', su.real_name as 'realName',su.department as 'department',
+        su.business_unit as 'unit', name as 'projectName', COUNT(sp.id) as 'numOfProject',
+        sp.hours as 'hours', sp.credit as 'credit', sp.begin_time as 'beginTime', sp.end_time as 'endTime',
+        sp.create_time as 'createTime', sp.id as 'projectId'
+        FROM sys_project sp
+
+        LEFT JOIN sa_user su on sp.create_user_id = su.id
+        LEFT JOIN sys_activity sa on sp.id = sa.project_id
+        WHERE
+        <if test="condition != null and condition.realName != null">
+            su.real_name like concat('%', #{condition.realName}, '%')
+        </if>
+        <if test="condition != null and condition.username != null">
+            and su.username like concat('%', #{condition.username}, '%')
+        </if>
+        <if test="condition != null and condition.endTime != null and condition.beginTime != null">
+            and sp.create_time between #{condition.beginTime} and #{condition.endTime}
+        </if>
+        GROUP BY sp.id, su.business_unit
+        order by su.username
+    </select>
+
+    <resultMap id="projectResultMap" type="com.example.activityUP.entity.DTO.AllProjectDTO">
+        <result property="username" column="username" />
+        <result property="realName" column="realName" />
+        <result property="department" column="department" />
+        <result property="unit" column="unit" />
+        <result property="projectName" column="projectName" />
+        <result property="numOfProject" column="numOfProject" />
+        <result property="hours" column="hours" />
+        <result property="credit" column="credit" />
+        <result property="beginTime" column="beginTime" />
+        <result property="endTime" column="endTime" />
+        <result property="createTime" column="createTime" />
+    </resultMap>
+
 </mapper>

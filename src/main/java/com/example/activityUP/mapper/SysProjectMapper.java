@@ -1,7 +1,12 @@
 package com.example.activityUP.mapper;
 
+import com.example.activityUP.entity.DTO.AllProjectDTO;
 import com.example.activityUP.entity.SysProject;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.activityUP.entity.Vo.FormQuery;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +18,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface SysProjectMapper extends BaseMapper<SysProject> {
 
+    List<AllProjectDTO> findAllUnit();
+
+    List<AllProjectDTO> findAllProjects(@Param("condition") AllProjectDTO condition);
+
+    List<AllProjectDTO> findAllDepartment();
 }

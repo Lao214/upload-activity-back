@@ -84,7 +84,7 @@ public class SysActivityController {
                 EasyExcel.read(file.getInputStream(), SysActivity.class, new UploadDataListener(sysActivityService,enterActivity.getId(),enterActivity.getEnterProjectId())).sheet().doRead();
             } catch (Exception e) {
                 // 处理异常，比如记录日志，返回错误信息等
-                return Result.error().msg("导入失败：可能存在格式错误，或者模版错误,对于日期列没有数据可以不填");
+                return Result.error().msg("导入失败：可能存在格式错误或者模版错误,对于日期列没有数据可以不填，工号列不能出现中文");
             }
         } else {
             return Result.error().msg("导入失败，可能存在格式错误，或者模版错误");
@@ -121,7 +121,7 @@ public class SysActivityController {
     }
 
     /**
-     * @description:  导出项目的 活动资料 （分页）
+     * @description:  导出项目的，活动资料 （分页）
      * @param:
      * @return:
      * @author 劳威锟
