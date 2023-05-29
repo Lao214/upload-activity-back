@@ -48,6 +48,14 @@ public class AllProjectDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "GMT+8")
     Date endTime;
 
+    /** 项目开始时间 **/
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd" , timezone = "GMT+8")
+    Date projectBegin;
+
+    /** 项目结束时间 **/
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd" , timezone = "GMT+8")
+    Date projectEnd;
+
     /** 创建时间 **/
     Date createTime;
 

@@ -39,6 +39,12 @@
         <if test="condition != null and condition.endTime != null and condition.beginTime != null">
             and sp.create_time between #{condition.beginTime} and #{condition.endTime}
         </if>
+        <if test="condition != null and condition.projectBegin != null">
+            and sp.begin_time > #{condition.projectBegin}
+        </if>
+        <if test="condition != null and condition.projectEnd != null">
+            and sp.end_time &lt; #{condition.projectEnd}
+        </if>
         GROUP BY sp.id, su.business_unit
         order by su.username
     </select>
