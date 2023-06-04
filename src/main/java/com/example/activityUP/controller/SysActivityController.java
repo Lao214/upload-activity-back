@@ -225,7 +225,7 @@ public class SysActivityController {
     }
 
     @GetMapping("downloadAuditList")
-    public void downloadAuditList(HttpServletResponse response,@ModelAttribute  FormQuery formQuery) throws IOException  {
+    public void downloadAuditList(HttpServletResponse response,@ModelAttribute FormQuery formQuery) throws IOException  {
         /**构建条件**/
         QueryWrapper<SysActivity> queryWrapper =new QueryWrapper<>();
         // 根据录入id查询
