@@ -102,6 +102,7 @@ public class SaUserController {
         saUserRole.setStatus(1);
         saUserRole.setRoleId(2l);
         saUserRoleService.save(saUserRole);
+        StpUtil.logout();
         if (save) {
             return result.success().data("data",userForm);
         } else {
