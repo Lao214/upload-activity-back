@@ -73,7 +73,7 @@ public class UploadDataListener implements ReadListener<SysActivity> {
     }
 
     public static boolean checkString(String str) {
-        String regex = "^[a-zA-Z0-9]*$";
+        String regex = "^[a-zA-Z0-9-]*$";
         return str.matches(regex);
     }
 
